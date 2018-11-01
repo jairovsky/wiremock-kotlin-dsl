@@ -1,6 +1,27 @@
 package io.jairovsky.wiremock.dsl
 
+import com.github.tomakehurst.wiremock.client.MappingBuilder
+import com.github.tomakehurst.wiremock.client.WireMock
+
 class StubScope {
 
-    lateinit var url: UrlPatternScope
+    val builders = mutableListOf<MappingBuilder>()
+
+    fun get(init: MappingScope.() -> Unit) {
+
+        addNewMapping("GET", init)
+    }
+
+    fun patch(init: MappingScope.() -> Unit) {
+
+        addNewMapping("PATCH", init)
+    }
+
+    private fun addNewMapping(method: String, init: MappingScope.() -> Unit) {
+
+        val scope = MappingScope()
+        scope.init()
+
+        builders.add(WireMock.request(method, scope.url.pattern))
+    }
 }

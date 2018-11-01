@@ -1,37 +1,46 @@
 package io.jairovsky.wiremock.dsl
 
 import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.matching.UrlPattern
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.verify
-import org.junit.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+
 
 class UrlPatternScopeTest {
 
-    @Test
-    fun `should validate equalTo field is not null` () {
-
-        val scope = UrlPatternScope()
-
-        assertFailsWith<IllegalArgumentException> {
-            scope.pattern
-        }
+    @BeforeTest
+    fun init () {
+        mockkStatic(WireMock::class)
     }
 
     @Test
-    fun `should return a UrlPattern equivalent to WireMock#urlEqualTo()` () {
+    fun `should create a pattern equivalent to WireMock#urlEqualTo` () {
 
-        mockkStatic(WireMock::class)
-        every { WireMock.urlEqualTo(any()) } returns mockk()
+        val p = mockk<UrlPattern>()
+        every { WireMock.urlEqualTo(any()) } returns p
 
-        val scope = UrlPatternScope()
-        scope.equalTo = "/abcd"
-
-        scope.pattern
+        val url = UrlPatternScope()
+        url equalTo "/abcd"
 
         verify { WireMock.urlEqualTo("/abcd") }
+        assert(url.pattern === p)
+    }
+
+
+    @Test
+    fun `should create a pattern equivalent to WireMock#urlMatching` () {
+
+        val p = mockk<UrlPattern>()
+        every { WireMock.urlMatching(any()) } returns p
+
+        val url = UrlPatternScope()
+        url matching  "/abcd"
+
+        verify { WireMock.urlMatching("/abcd") }
+        assert(url.pattern === p)
     }
 }

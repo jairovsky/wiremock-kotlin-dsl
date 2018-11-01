@@ -2,22 +2,17 @@ package io.jairovsky.wiremock.dsl
 
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.matching.UrlPattern
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
 
 class UrlPatternScope {
 
-    var equalTo: String? = null
+    lateinit var pattern: UrlPattern
 
-    val pattern: UrlPattern by UrlPatternDelegate()
+    infix fun equalTo(str: String) {
+        pattern = WireMock.urlEqualTo(str)
+    }
 
-}
-
-class UrlPatternDelegate : ReadOnlyProperty<UrlPatternScope, UrlPattern> {
-    override fun getValue(thisRef: UrlPatternScope, property: KProperty<*>): UrlPattern {
-
-        require(thisRef.equalTo != null) { "You must define a url" }
-
-        return WireMock.urlEqualTo(thisRef.equalTo)
+    infix fun matching(str: String) {
+        pattern = WireMock.urlMatching(str)
     }
 }
+
