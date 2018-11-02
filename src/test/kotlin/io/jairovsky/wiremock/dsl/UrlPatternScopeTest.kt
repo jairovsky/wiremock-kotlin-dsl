@@ -13,12 +13,12 @@ import kotlin.test.Test
 class UrlPatternScopeTest {
 
     @BeforeTest
-    fun init () {
+    fun init() {
         mockkStatic(WireMock::class)
     }
 
     @Test
-    fun `should create a pattern equivalent to WireMock#urlEqualTo` () {
+    fun `should create a pattern equivalent to WireMock#urlEqualTo`() {
 
         val p = mockk<UrlPattern>()
         every { WireMock.urlEqualTo(any()) } returns p
@@ -32,13 +32,13 @@ class UrlPatternScopeTest {
 
 
     @Test
-    fun `should create a pattern equivalent to WireMock#urlMatching` () {
+    fun `should create a pattern equivalent to WireMock#urlMatching`() {
 
         val p = mockk<UrlPattern>()
         every { WireMock.urlMatching(any()) } returns p
 
         val url = UrlPatternScope()
-        url matching  "/abcd"
+        url matching "/abcd"
 
         verify { WireMock.urlMatching("/abcd") }
         assert(url.pattern === p)

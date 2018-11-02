@@ -11,22 +11,23 @@ import org.junit.Test
 class DSLTest {
 
     @Before
-    fun init () {
+    fun init() {
         mockkStatic(WireMock::class)
         every { WireMock.stubFor(any()) } returns mockk()
     }
 
     @Test
-    fun `experimenting` () {
-
-//        WireMock.stubFor(
-//                WireMock.get(WireMock.urlEqualTo(""))
-//
-//                .willReturn())
+    fun `experimenting`() {
 
         stubFor {
             get {
                 url equalTo "/my-api"
+                willReturn {
+                    headers = mapOf(
+                        "X-Request-Id" to "abcdbebriqwey",
+                        "" to ""
+                    )
+                }
             }
 
             patch {
