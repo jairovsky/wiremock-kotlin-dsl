@@ -14,9 +14,13 @@ class ResponseScope {
             field.forEach { builder.withHeader(it.key, it.value) }
         }
 
-    var status: Int = 200
+    var status = 200
         set(value) {
             field = value
             builder.withStatus(field)
         }
+
+    var body = ResponseBodyScope {
+        builder.withBody(it)
+    }
 }
