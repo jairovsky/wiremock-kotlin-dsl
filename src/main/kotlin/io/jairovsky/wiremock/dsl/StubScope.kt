@@ -22,6 +22,14 @@ class StubScope {
         val scope = MappingScope()
         scope.init()
 
-        builders.add(WireMock.request(method, scope.url.pattern))
+        builders.add(buildRealWireMockMapping(method, scope))
+    }
+
+    private fun buildRealWireMockMapping(method: String,
+                                         scope: MappingScope): MappingBuilder {
+
+        return WireMock
+            .request(method, scope.url.pattern)
+            .willReturn(scope.willReturn.builder)
     }
 }

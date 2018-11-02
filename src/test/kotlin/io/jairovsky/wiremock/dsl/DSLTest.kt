@@ -23,9 +23,9 @@ class DSLTest {
             get {
                 url equalTo "/my-api"
                 willReturn {
+                    status = 200
                     headers = mapOf(
-                        "X-Request-Id" to "abcdbebriqwey",
-                        "" to ""
+                        "X-Request-Id" to "abcdbebriqwey"
                     )
                 }
             }
