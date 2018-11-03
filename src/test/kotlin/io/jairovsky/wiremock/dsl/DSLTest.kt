@@ -8,6 +8,7 @@ import io.mockk.verify
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import java.io.File
 
 class DSLTest {
 
@@ -15,7 +16,7 @@ class DSLTest {
     fun init() {
         mockkStatic(WireMock::class)
         WireMock.removeAllMappings()
-        every { WireMock.stubFor(any()) } returns mockk()
+        //every { WireMock.stubFor(any()) } returns mockk()
     }
 
     @Test
@@ -37,12 +38,12 @@ class DSLTest {
             patch {
                 url matching "/my-api-2"
                 willReturn {
-                    body string "huehue"
+                    body file "sample.json"
                 }
             }
         }
 
-        verify(exactly = 2) { WireMock.stubFor(any()) }
+        //verify(exactly = 2) { WireMock.stubFor(any()) }
     }
 }
 

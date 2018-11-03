@@ -20,7 +20,8 @@ class ResponseScope {
             builder.withStatus(field)
         }
 
-    var body = ResponseBodyScope {
-        builder.withBody(it)
-    }
+    var body = ResponseBodyScope(
+        builder::withBody,
+        builder::withBodyFile
+    )
 }
