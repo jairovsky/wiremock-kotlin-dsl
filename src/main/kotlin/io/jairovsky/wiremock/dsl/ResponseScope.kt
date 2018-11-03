@@ -24,4 +24,10 @@ class ResponseScope {
         builder::withBody,
         builder::withBodyFile
     )
+
+    var fixedDelay = 0
+        set(value) {
+            field = value
+            builder.withFixedDelay(field)
+        }
 }

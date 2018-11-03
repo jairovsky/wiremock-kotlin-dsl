@@ -26,12 +26,13 @@ class DSLTest {
             get {
                 url equalTo "/my-api"
                 willReturn {
-                    status = 200
 
                     headers = mapOf(
-                        "X-Request-Id" to "abcdbebriqwey")
+                        "X-Request-Id" to "abcdbebriqwey",
+                        "Content-Type" to "application/json")
 
                     body jsonFromObject Song("The revenge of Vera Gemini")
+
                 }
             }
 
@@ -44,6 +45,8 @@ class DSLTest {
         }
 
         //verify(exactly = 2) { WireMock.stubFor(any()) }
+
+
     }
 }
 
