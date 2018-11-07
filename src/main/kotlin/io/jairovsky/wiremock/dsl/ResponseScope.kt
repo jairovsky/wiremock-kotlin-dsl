@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 
 class ResponseScope {
 
-    val builder =
+    private val builder =
         ResponseDefinitionBuilder()
             .withStatus(200)!!
 
@@ -25,9 +25,38 @@ class ResponseScope {
         builder::withBodyFile
     )
 
-    var fixedDelay = 0
-        set(value) {
-            field = value
-            builder.withFixedDelay(field)
-        }
+    fun fixedDelay(fn: FixedDelay.() -> Unit) {
+        val delay = FixedDelay().apply(fn)
+
+        builder.withFixedDelay(delay.milliseconds)
+    }
+
+    fun chunkedDribbleDelay(fn: ChunkedDribbleDelay.() -> Unit) {
+        val delay = ChunkedDribbleDelay().apply(fn)
+
+        builder.withChunkedDribbleDelay(delay.numberOfChunks, delay.totalDuration)
+    }
+
+    fun logNormalRandomDelay(fn: LogNormalRandomDelay.() -> Unit) {
+        val delay = LogNormalRandomDelay().apply(fn)
+
+        builder.withLogNormalRandomDelay(delay.medianMilliseconds, delay.sigma)
+    }
+}
+
+class FixedDelay {
+
+    var milliseconds = 0
+}
+
+class ChunkedDribbleDelay {
+
+    var numberOfChunks = 0
+    var totalDuration = 0
+}
+
+class LogNormalRandomDelay {
+
+    var medianMilliseconds: Double = 0.0
+    var sigma: Double = 0.0
 }

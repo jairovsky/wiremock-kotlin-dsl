@@ -33,13 +33,30 @@ class DSLTest {
 
                     body jsonFromObject Song("The revenge of Vera Gemini")
 
+
                 }
+
+
             }
 
             patch {
                 url matching "/my-api-2"
                 willReturn {
                     body file "sample.json"
+
+                    fixedDelay {
+                        milliseconds = 1000
+                    }
+
+                    chunkedDribbleDelay {
+                        numberOfChunks = 5
+                        totalDuration = 1000
+                    }
+
+                    logNormalRandomDelay {
+                        medianMilliseconds = 90.0
+                        sigma = 0.1
+                    }
                 }
             }
         }
@@ -49,6 +66,8 @@ class DSLTest {
 
     }
 }
+
+
 
 data class Song(
     val title: String
