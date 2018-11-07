@@ -1,6 +1,7 @@
 package io.jairovsky.wiremock.dsl
 
 import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.http.Fault
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -57,13 +58,15 @@ class DSLTest {
                         medianMilliseconds = 90.0
                         sigma = 0.1
                     }
+
+                    withFault {
+                        type = Fault.MALFORMED_RESPONSE_CHUNK
+                    }
                 }
             }
         }
 
         //verify(exactly = 2) { WireMock.stubFor(any()) }
-
-
     }
 }
 

@@ -1,6 +1,8 @@
 package io.jairovsky.wiremock.dsl
 
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
+import com.github.tomakehurst.wiremock.http.Fault
+import com.sun.xml.internal.ws.wsdl.writer.document.FaultType
 
 class ResponseScope {
 
@@ -42,6 +44,15 @@ class ResponseScope {
 
         builder.withLogNormalRandomDelay(delay.medianMilliseconds, delay.sigma)
     }
+
+    fun withFault(fn: FaultScope.() -> Unit) {
+        builder.withFault(FaultScope().apply(fn).type)
+    }
+}
+
+class FaultScope {
+
+    lateinit var type: Fault
 }
 
 class FixedDelay {
