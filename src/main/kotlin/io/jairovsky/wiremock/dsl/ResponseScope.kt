@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 
 class ResponseScope {
 
-    private val builder =
+    val builder =
         ResponseDefinitionBuilder()
             .withStatus(200)!!
 
