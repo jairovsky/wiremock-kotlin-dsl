@@ -63,8 +63,10 @@ class StubScope {
     private fun buildRealWireMockMapping(method: String,
                                          scope: MappingScope): MappingBuilder {
 
-        return WireMock
+        val builder = WireMock
             .request(method, scope.url.pattern)
             .willReturn(scope.willReturn.builder)
+
+        return builder
     }
 }

@@ -23,6 +23,7 @@ class DSLTest {
     @Test
     fun `experimenting`() {
 
+
         stubFor {
             get {
                 url equalTo "/my-api"
@@ -42,6 +43,12 @@ class DSLTest {
 
             patch {
                 url matching "/my-api-2"
+
+                headers {
+                    "My-Delicious-Cookie" containing "huehue"
+                    "Session-Id" matching "abc.*"
+                }
+
                 willReturn {
                     body file "sample.json"
 
