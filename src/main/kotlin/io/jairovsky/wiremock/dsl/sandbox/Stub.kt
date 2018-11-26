@@ -2,11 +2,18 @@ package io.jairovsky.wiremock.dsl.sandbox
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.http.RequestMethod
 import com.github.tomakehurst.wiremock.matching.UrlPattern
 
-fun stubFor(fn: StubCreator.() -> Unit) {
+fun stubFor(fn: RequestStubCreator.() -> Unit) {
 
-    StubCreator(WireMockContext()).apply(fn)
+    val ctx = WireMockContext()
+
+    RequestStubCreator(ctx).apply(fn)
+
+    ctx.getMappings().forEach {
+        WireMock.stubFor(it)
+    }
 }
 
 class WireMockContext {
@@ -16,62 +23,76 @@ class WireMockContext {
     fun addMapping(m: MappingBuilder) {
         mappings.add(m)
     }
+
+    fun getMappings() = mappings
 }
 
-class StubCreator(val ctx: WireMockContext) {
+class RequestStubCreator(val ctx: WireMockContext) {
 
     fun get(init: MappingBuilderContext.() -> Unit) {
 
-        val mappingContext = MappingBuilderContext()
+        val mappingContext = MappingBuilderContext(RequestMethod.GET)
 
         mappingContext.init()
 
-        //ctx.addMapping()
+
+
+        ctx.addMapping(mappingContext.createObject())
     }
 }
 
-class MappingBuilderContext {
+class MappingBuilderContext(private val method: RequestMethod) {
 
-    val url = UrlPatternCreator()
-    private val assertions = mutableSetOf<String>()
+    fun createObject(): MappingBuilder {
 
-    init {
-        url.onPattern {
-
-            if (assertions.contains("URL")) {
-                throw RepeatedOperation()
-            }
-
-            assertions.add("URL")
-        }
+        return WireMock.request(method.name, url.createObject())
     }
 
+    val url = UrlPatternContext()
 }
 
-class UrlPatternCreator {
+class UrlPatternContext {
 
-    private val listeners = mutableListOf<(UrlPattern) -> Unit>()
+    private var _pattern: UrlPattern? = null
 
     infix fun equalTo(url: String) {
 
-        val pattern = WireMock.urlEqualTo(url)
-
-        listeners.forEach { it(pattern) }
+        assertUndefined()
+        _pattern = WireMock.urlEqualTo(url)
     }
 
     infix fun matching(strPattern: String) {
 
-        val pattern = WireMock.urlMatching(strPattern)
-
-        listeners.forEach { it(pattern) }
+        assertUndefined()
+        _pattern = WireMock.urlMatching(strPattern)
     }
 
-    fun onPattern(function: (UrlPattern) -> Unit) {
+    fun createObject(): UrlPattern {
 
-        listeners.add(function)
+        assertDefined()
+
+        return _pattern as UrlPattern
+    }
+
+    private fun assertUndefined() {
+
+        if (_pattern != null) {
+            throw UnsupportedOperationException("Property 'url' was already defined")
+        }
+    }
+
+    private fun assertDefined() {
+
+        if (_pattern == null) {
+
+            throw UninitializedPropertyAccessException("""
+                    Url pattern not defined.
+
+                    You can define it using
+                        url equalTo "/something"
+                    or
+                        url matching "/something"
+                """.trimIndent())
+        }
     }
 }
-
-
-class RepeatedOperation() :
-    Exception("Duplicate operation in the same context. Are you trying to define a property more than once?")

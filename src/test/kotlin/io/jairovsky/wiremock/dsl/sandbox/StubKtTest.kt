@@ -9,8 +9,8 @@ class StubKtTest {
 
         stubFor {
             get {
-                url matching ""
-                url equalTo ""
+                url equalTo "/huehue"
+                url equalTo "/huehue"
             }
         }
     }
