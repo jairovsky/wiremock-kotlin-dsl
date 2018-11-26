@@ -6,6 +6,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.verify
+import org.apache.http.HttpHeaders
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -28,19 +29,16 @@ class DSLTest {
                 url equalTo "/my-api"
                 willReturn {
 
-                    headers = mapOf(
-                        "X-Request-Id" to "abcdbebriqwey",
-                        "Content-Type" to "application/json")
+                    headers {
+                        "Content-Type" withValue "application/json"
+                        "X-Request-Id" withValue "f87ce6b0-f1bc-11e8-b9ee-273fd06674b2"
+                    }
 
-                    body jsonFromObject Song("The revenge of Vera Gemini")
-
-
+                    //body jsonFromObject Song("The revenge of Vera Gemini")
                 }
-
-
             }
 
-            patch {
+           /* patch {
                 url matching "/my-api-2"
                 willReturn {
                     body file "sample.json"
@@ -63,7 +61,7 @@ class DSLTest {
                         type = Fault.MALFORMED_RESPONSE_CHUNK
                     }
                 }
-            }
+            }*/
         }
 
         //verify(exactly = 2) { WireMock.stubFor(any()) }

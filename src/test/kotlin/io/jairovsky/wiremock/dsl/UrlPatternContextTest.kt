@@ -1,4 +1,4 @@
-package io.jairovsky.wiremock.dsl.sandbox
+package io.jairovsky.wiremock.dsl
 
 import com.github.tomakehurst.wiremock.client.WireMock
 import kotlin.test.Test
