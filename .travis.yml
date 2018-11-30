@@ -1,10 +1,2 @@
 language: java
 
-services:
-  - docker
-
-before_script:
-  - docker container run --name "wiremock-sidecar" -d --rm -ti -p 8080:8080 rodolpheche/wiremock:2.19.0 --verbose
-
-after_script:
-  - docker container stop wiremock-sidecar

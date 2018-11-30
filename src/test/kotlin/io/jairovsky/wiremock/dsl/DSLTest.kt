@@ -1,25 +1,15 @@
 package io.jairovsky.wiremock.dsl
 
 import com.github.tomakehurst.wiremock.client.WireMock
-import com.github.tomakehurst.wiremock.http.Fault
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.mockkStatic
-import io.mockk.verify
-import org.apache.http.HttpHeaders
-import org.junit.After
-import org.junit.Before
+import com.github.tomakehurst.wiremock.common.ConsoleNotifier
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration
+import com.github.tomakehurst.wiremock.junit.WireMockRule
+import org.junit.Rule
 import org.junit.Test
-import java.io.File
 
 class DSLTest {
 
-    @Before
-    fun init() {
-        mockkStatic(WireMock::class)
-        WireMock.removeAllMappings()
-        //every { WireMock.stubFor(any()) } returns mockk()
-    }
+    @Rule @JvmField val wireMockRule = WireMockRule(WireMockConfiguration.options().notifier(ConsoleNotifier(true)))
 
     @Test
     fun `experimenting`() {
@@ -34,7 +24,7 @@ class DSLTest {
                         "X-Request-Id" withValue "f87ce6b0-f1bc-11e8-b9ee-273fd06674b2"
                     }
 
-                    //body jsonFromObject Song("The revenge of Vera Gemini")
+                    body jsonFromObject Song("The revenge of Vera Gemini")
                 }
             }
 
@@ -67,8 +57,6 @@ class DSLTest {
         //verify(exactly = 2) { WireMock.stubFor(any()) }
     }
 }
-
-
 
 data class Song(
     val title: String
