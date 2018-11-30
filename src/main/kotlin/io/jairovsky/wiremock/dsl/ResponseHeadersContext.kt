@@ -13,4 +13,6 @@ class ResponseHeadersContext {
 
         headers.forEach {fn(it.key, it.value)}
     }
+
+    operator fun iterator() = headers.iterator()
 }
