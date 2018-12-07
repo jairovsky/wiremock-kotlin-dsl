@@ -14,7 +14,7 @@ fun stubFor(fn: RequestStubCreator.() -> Unit) {
     }
 }
 
-class RequestStubCreator(val ctx: WireMockContext) {
+class RequestStubCreator(private val ctx: WireMockContext) {
 
     fun get(init: MappingBuilderContext.() -> Unit) {
 
